@@ -1,40 +1,12 @@
 import os
-
 import datetime
 
-def save_debug_log(event):
-    date = datetime.datetime.now()
-    event = (str(date) + " - " + str(event))
-    debug = open(debug_file_path, 'a+')
-    debug.write(str(event) + "\n")
-    debug.close()
+from app_config import config
+from main_screen import main_screen
+from new_task import new_task
 
-def print_debug_log(debug_file_path):
-    debug = open(debug_file_path, 'r')
-    debug_content = debug.readlines()
-    debug.close()
 
-    for line in debug_content:
-        print(line)
 
-class config():
-
-    config_file = None
-
-    def __init__(self, config):
-        self.config_file_path = config
-        self.reload_config()
-
-    def reload_config(self):
-        try:
-           self.config_file = open(self.config_file_path,'r')
-           config_data = self.config_file.read()
-
-        except IOError as e:
-            save_debug_log(e)
-        except Exception as e:
-            save_debug_log(e)
-            self.config_file.close()
 
 
 #Load config from file
@@ -45,7 +17,22 @@ debug_file_path = "my-daily-tasks-timer_debug.txt"
 if not os.path.isfile(debug_file_path):
     print("Plik debug nie istnieje!")
 
-myconfig = config(config_file_path)
+myconfig = config(config_file_path, debug_file_path)
 #myconfig.reload_config()
+#print_debug_log(debug_file_path)
 
-print_debug_log(debug_file_path)
+#------------------
+
+#initialize new task
+t1 = new_task()
+
+#initirialize main screen
+ms = main_screen(t1)
+
+while True:
+    ms.print_current_task()
+    ms.print_options()
+    ms.read_option()
+
+
+
